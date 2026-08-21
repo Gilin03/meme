@@ -1,208 +1,846 @@
+/* =========================
+   기본
+========================= */
+
 * {
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  color: #222;
+  min-height: 100%;
 }
 
-button,
-input {
-  font: inherit;
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans KR",
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(99, 102, 241, 0.2),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(168, 85, 247, 0.16),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #080b18 0%,
+      #10152b 50%,
+      #090d1d 100%
+    );
+
+  color: #f8fafc;
 }
+
+
+/* =========================
+   전체 앱
+========================= */
 
 .app {
+  width: 100%;
   min-height: 100vh;
+
+  padding: 36px 40px 60px;
 }
 
+
+/* =========================
+   헤더
+========================= */
+
 .header {
-  padding: 30px 40px;
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
+  width: min(1200px, 100%);
+  margin: 0 auto 30px;
+
+  text-align: center;
 }
 
 .header h1 {
-  margin: 0 0 8px;
-  font-size: 28px;
+  margin: 0;
+
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #60a5fa,
+      #8b5cf6,
+      #ec4899
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
 }
 
 .header p {
-  margin: 0;
-  color: #666;
+  margin: 9px 0 0;
+
+  color: #94a3b8;
+  font-size: 15px;
 }
+
+
+/* =========================
+   메인 2열
+========================= */
 
 .studio {
+  width: min(1200px, calc(100vw - 80px)) !important;
+  max-width: 1200px !important;
+
+  margin: 0 auto !important;
+
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 0 30px;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 24px;
+
+  align-items: start;
 }
 
-.controls,
-.preview-section {
-  background: #ffffff;
-  border-radius: 12px;
+
+/* =========================
+   왼쪽 편집 영역
+========================= */
+
+.controls {
+  width: 100%;
+
   padding: 24px;
-  border: 1px solid #ddd;
+
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25, 31, 52, 0.95),
+      rgba(13, 18, 34, 0.95)
+    );
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  backdrop-filter: blur(14px);
 }
 
 .controls h2,
 .preview-section h2 {
-  margin-top: 0;
+  margin: 0 0 22px;
+
+  font-size: 21px;
+  font-weight: 700;
+
+  color: #f8fafc;
 }
+
+
+/* =========================
+   컨트롤
+========================= */
 
 .control-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.control-group label {
+.control-group > label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
+
+  margin-bottom: 9px;
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.control-group input[type="text"] {
+
+/* =========================
+   텍스트 입력
+========================= */
+
+input[type="text"] {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 9px;
+
+  outline: none;
+
+  background: rgba(8, 13, 29, 0.85);
+  color: #f8fafc;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-.control-group input[type="range"] {
-  width: 100%;
+input[type="text"]::placeholder {
+  color: #64748b;
 }
+
+input[type="text"]:focus {
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+
+/* =========================
+   파일
+========================= */
+
+input[type="file"] {
+  width: 100%;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+input[type="file"]::file-selector-button {
+  margin-right: 8px;
+
+  padding: 8px 11px;
+
+  border: none;
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #8b5cf6
+    );
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   슬라이더
+========================= */
+
+input[type="range"] {
+  width: 100%;
+
+  accent-color: #8b5cf6;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   색상
+========================= */
+
+input[type="color"] {
+  width: 48px;
+  height: 34px;
+
+  padding: 3px;
+
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+
+  background: #0f172a;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   화면 비율
+========================= */
 
 .ratio-buttons {
-  display: flex;
-  gap: 8px;
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 7px;
 }
 
 .ratio-buttons button {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 6px;
+  height: 40px;
+
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+
+  background: rgba(8, 13, 29, 0.85);
+
+  color: #cbd5e1;
+
+  font-size: 13px;
+
   cursor: pointer;
+
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+}
+
+.ratio-buttons button:hover {
+  border-color: #8b5cf6;
+
+  transform: translateY(-1px);
 }
 
 .ratio-buttons button.active {
-  background: #222;
-  color: #fff;
-  border-color: #222;
+  border-color: transparent;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #8b5cf6
+    );
+
+  color: white;
+
+  font-weight: 700;
 }
 
-.preview-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.preview {
-  width: 400px;
-  max-width: 100%;
-  background: #333;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* =========================
+   템플릿 저장
+========================= */
 
-.ratio-1-1 {
-  aspect-ratio: 1 / 1;
-}
-
-.ratio-4-5 {
-  aspect-ratio: 4 / 5;
-}
-
-.ratio-9-16 {
-  aspect-ratio: 9 / 16;
-}
-
-.text-box {
-  position: absolute;
-  min-width: 80px;
-  min-height: 40px;
-  padding: 8px;
-  cursor: move;
-  user-select: none;
-}
-
-.text-box.selected {
-  border: 1px dashed rgba(255, 255, 255, 0.7);
-}
-
-.resize-handle {
-  display: none;
-}
-
-.text-box.selected .resize-handle {
-  display: block;
-}
-
-.preview-text {
+.template-save-button {
   width: 100%;
-  text-align: center;
-  font-weight: bold;
-  line-height: 1.2;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  pointer-events: none;
-}
-
-.resize-handle {
-  position: absolute;
-  right: -6px;
-  top: 50%;
-  width: 12px;
   height: 40px;
-  transform: translateY(-50%);
-  background: white;
-  border: 1px solid #555;
-  border-radius: 3px;
-  cursor: ew-resize;
-}
 
-.download-button {
-  margin-top: 20px;
-  padding: 12px 24px;
+  margin-top: 8px;
+
   border: none;
   border-radius: 8px;
-  background: #222;
-  color: #fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #8b5cf6,
+      #ec4899
+    );
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
+}
+
+.template-save-button:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px rgba(139, 92, 246, 0.25);
+}
+
+
+/* =========================
+   템플릿 목록
+========================= */
+
+.template-list {
+  margin-top: 17px;
+}
+
+.template-list > label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* JSON 내보내기 */
+.template-list > button {
+  height: 36px;
+
+  padding: 0 11px;
+
+  margin-bottom: 7px;
+
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 8px;
+
+  background: rgba(8, 13, 29, 0.85);
+
+  color: #cbd5e1;
+
   cursor: pointer;
 }
 
-.download-button:hover {
-  opacity: 0.85;
+.template-list > button:hover {
+  border-color: #8b5cf6;
+  color: white;
 }
 
-@media (max-width: 800px) {
+
+/* JSON 가져오기 */
+.json-import-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 36px;
+
+  margin-bottom: 10px;
+
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 8px;
+
+  background: rgba(8, 13, 29, 0.85);
+
+  color: #cbd5e1;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.json-import-button:hover {
+  border-color: #8b5cf6;
+  color: white;
+}
+
+
+/* 템플릿 하나 */
+.template-item {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  min-height: 46px;
+
+  padding: 7px 9px;
+
+  margin-bottom: 7px;
+
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 9px;
+
+  background: rgba(8, 13, 29, 0.65);
+}
+
+.template-item span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+}
+
+
+/* 템플릿 버튼 */
+.template-actions {
+  display: flex;
+
+  gap: 5px;
+
+  flex-shrink: 0;
+}
+
+.template-actions button {
+  padding: 7px 9px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #334155;
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.template-actions button:hover {
+  background: #475569;
+}
+
+
+/* 삭제 */
+.template-actions button:last-child {
+  background: #991b1b;
+}
+
+.template-actions button:last-child:hover {
+  background: #dc2626;
+}
+
+.empty-template {
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   오른쪽 미리보기
+========================= */
+
+.preview-section {
+  min-width: 0;
+
+  min-height: 650px;
+
+  padding: 28px;
+
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25, 31, 52, 0.95),
+      rgba(13, 18, 34, 0.95)
+    );
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  backdrop-filter: blur(14px);
+}
+
+
+/* =========================
+   실제 미리보기
+========================= */
+
+.preview {
+  position: relative;
+
+  width: min(540px, 100%);
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  background: #2f2f2f;
+
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+
+/* 비율 */
+.preview.ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+.preview.ratio-4-5 {
+  aspect-ratio: 4 / 5;
+}
+
+.preview.ratio-9-16 {
+  aspect-ratio: 9 / 16;
+}
+
+
+/* =========================
+   이미지
+========================= */
+
+.preview-image {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+
+/* =========================
+   이미지 없을 때
+========================= */
+
+.empty-preview {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   텍스트 박스
+========================= */
+
+.text-box {
+  position: absolute;
+
+  z-index: 5;
+
+  cursor: move;
+
+  text-align: center;
+}
+
+.text-box.selected {
+  outline: 1px dashed rgba(255, 255, 255, 0.65);
+}
+
+
+/* 실제 문구 */
+.preview-text {
+  width: 100%;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  overflow-wrap: anywhere;
+
+  line-height: 1.15;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  user-select: none;
+}
+
+
+/* =========================
+   크기 조절 핸들
+========================= */
+
+.resize-handle {
+  position: absolute;
+
+  right: -7px;
+  top: 50%;
+
+  width: 12px;
+  height: 28px;
+
+  transform: translateY(-50%);
+
+  border-radius: 4px;
+
+  background: white;
+
+  border: 1px solid #64748b;
+
+  cursor: ew-resize;
+}
+
+
+/* 선택되지 않았을 때 핸들 숨김 */
+.text-box:not(.selected) .resize-handle {
+  display: none;
+}
+
+
+/* =========================
+   다운로드
+========================= */
+
+.download-buttons {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.download-button {
+  min-width: 145px;
+
+  height: 42px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #8b5cf6
+    );
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
+}
+
+.download-button:last-child {
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #ec4899
+    );
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(99, 102, 241, 0.25);
+}
+
+
+/* =========================
+   반응형
+========================= */
+
+@media (max-width: 900px) {
+  .app {
+    padding: 25px 18px 40px;
+  }
+
   .studio {
     grid-template-columns: 1fr;
   }
 
+  .preview-section {
+    min-height: auto;
+  }
+
   .preview {
-    width: 100%;
-    max-width: 400px;
+    width: min(600px, 100%);
   }
 }
 
-.preview-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
+
+@media (max-width: 500px) {
+  .header h1 {
+    font-size: 29px;
+  }
+
+  .controls,
+  .preview-section {
+    padding: 18px;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+  }
+
+  .download-button {
+    width: 100%;
+  }
 }
 
-.empty-preview {
-  color: #aaa;
-  font-size: 16px;
+/* 전체 화면 너비 강제 */
+.app {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh;
+
+  margin: 0 !important;
+  padding: 36px 40px 60px;
+
+  border: none !important;
 }
+
+.json-import-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 38px;
+
+  margin: 0 0 10px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+
+  background: rgba(15, 23, 42, 0.85);
+  color: #cbd5e1;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.json-import-button:hover {
+  border-color: #8b5cf6;
+  color: #ffffff;
+  background: rgba(30, 41, 59, 0.95);
+}
+
