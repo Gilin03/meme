@@ -19,6 +19,40 @@ function App() {
   const draggingRef = useRef(false);
   const resizingRef = useRef(false);
 
+  const wrapText = (ctx, text, maxWidth) => {
+  const lines = [];
+
+  // 직접 입력한 줄바꿈도 유지
+  const paragraphs = text.split("\n");
+
+  paragraphs.forEach((paragraph) => {
+    let currentLine = "";
+
+    for (const char of paragraph) {
+      const testLine = currentLine + char;
+      const testWidth = ctx.measureText(testLine).width;
+
+      if (testWidth > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = char;
+      } else {
+        currentLine = testLine;
+      }
+    }
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    // 빈 줄 유지
+    if (paragraph === "") {
+      lines.push("");
+    }
+  });
+
+  return lines;
+};
+
   const [isTextSelected, setIsTextSelected] = useState(false);
 
   const handleImageUpload = (event) => {
@@ -35,7 +69,7 @@ function App() {
     setImage(imageUrl);
   };
 
-  const handleDownload = (format) => {
+ const handleDownload = (format) => {
   if (!image) {
     alert("먼저 이미지를 업로드해주세요.");
     return;
@@ -58,8 +92,20 @@ function App() {
   const backgroundImage = new Image();
 
   backgroundImage.onload = () => {
+    const preview = previewRef.current;
+    const textElement = preview.querySelector(".preview-text");
+
+    if (!textElement) return;
+
+    const previewRect = preview.getBoundingClientRect();
+    const textRect = textElement.getBoundingClientRect();
+
+    // 미리보기와 다운로드 Canvas의 크기 비율
+    const scaleX = width / previewRect.width;
+    const scaleY = height / previewRect.height;
+
     // =========================
-    // 1. 미리보기와 동일하게 이미지 배치
+    // 1. 이미지
     // =========================
 
     const imageRatio =
@@ -73,13 +119,11 @@ function App() {
     let drawY;
 
     if (imageRatio > canvasRatio) {
-      // 이미지가 더 가로로 넓음
       drawHeight = height;
       drawWidth = height * imageRatio;
       drawX = (width - drawWidth) / 2;
       drawY = 0;
     } else {
-      // 이미지가 더 세로로 김
       drawWidth = width;
       drawHeight = width / imageRatio;
       drawX = 0;
@@ -95,91 +139,115 @@ function App() {
     );
 
     // =========================
-    // 2. 텍스트 위치
+    // 2. 실제 브라우저 줄바꿈 가져오기
     // =========================
 
-    const textX =
-      (textPosition.x / 100) * width;
+    const textNode = textElement.firstChild;
 
-    const textY =
-      (textPosition.y / 100) * height;
+    if (!textNode) return;
 
-    // 텍스트 박스 폭
-    const textWidthPx =
-      (textWidth / 100) * width;
-
-    // =========================
-    // 3. 글자 크기
-    // =========================
-
-    const preview = previewRef.current;
-
-    const previewWidth =
-      preview.getBoundingClientRect().width;
-
-    const scale =
-      width / previewWidth;
-
-    const fontSizePx =
-      fontSize * scale;
-
-    ctx.fillStyle = textColor;
-    ctx.font = `bold ${fontSizePx}px Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    // =========================
-    // 4. 줄바꿈
-    // =========================
-
-    const words = text.split(" ");
     const lines = [];
-
     let currentLine = "";
+    let previousTop = null;
 
-    words.forEach((word) => {
-      const testLine = currentLine
-        ? `${currentLine} ${word}`
-        : word;
+    for (let i = 0; i < textNode.textContent.length; i++) {
+      const char = textNode.textContent[i];
 
-      const testWidth =
-        ctx.measureText(testLine).width;
+      const range = document.createRange();
+      range.setStart(textNode, i);
+      range.setEnd(textNode, i + 1);
+
+      const rects = range.getClientRects();
+
+      if (char === "\n") {
+        lines.push(currentLine);
+        currentLine = "";
+        previousTop = null;
+        continue;
+      }
+
+      if (rects.length === 0) {
+        currentLine += char;
+        continue;
+      }
+
+      const charRect = rects[0];
 
       if (
-        testWidth > textWidthPx &&
-        currentLine
+        previousTop !== null &&
+        Math.abs(charRect.top - previousTop) > 2
       ) {
         lines.push(currentLine);
-        currentLine = word;
-      } else {
-        currentLine = testLine;
+        currentLine = "";
       }
-    });
+
+      currentLine += char;
+      previousTop = charRect.top;
+    }
 
     if (currentLine) {
       lines.push(currentLine);
     }
 
     // =========================
+    // 3. 실제 미리보기 글자 스타일
+    // =========================
+
+    const computedStyle =
+      window.getComputedStyle(textElement);
+
+    const previewFontSize =
+      parseFloat(computedStyle.fontSize);
+
+    const previewLineHeight =
+      parseFloat(computedStyle.lineHeight);
+
+    const fontSizePx =
+      previewFontSize * scaleX;
+
+    const lineHeightPx =
+      previewLineHeight * scaleY;
+
+    ctx.fillStyle = computedStyle.color;
+    ctx.font =
+      `${computedStyle.fontWeight} ${fontSizePx}px Arial`;
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // =========================
+    // 4. 미리보기 텍스트 중심 위치
+    // =========================
+
+    const textCenterX =
+      (textRect.left -
+        previewRect.left +
+        textRect.width / 2) *
+      scaleX;
+
+    const textCenterY =
+      (textRect.top -
+        previewRect.top +
+        textRect.height / 2) *
+      scaleY;
+
+    const totalHeight =
+      lines.length * lineHeightPx;
+
+    // =========================
     // 5. 텍스트 그리기
     // =========================
 
-    const lineHeight =
-      fontSizePx * 1.2;
-
-    const totalHeight =
-      lines.length * lineHeight;
-
     lines.forEach((line, index) => {
       const lineY =
-        textY -
+        textCenterY -
         totalHeight / 2 +
-        index * lineHeight +
-        lineHeight / 2;
+        index * lineHeightPx +
+        lineHeightPx / 2;
 
       ctx.fillText(
         line,
-        textX,
+        textCenterX,
         lineY
       );
     });
@@ -205,10 +273,7 @@ function App() {
       `meme-${aspectRatio.replace(":", "-")}.${extension}`;
 
     link.href =
-      canvas.toDataURL(
-        mimeType,
-        0.95
-      );
+      canvas.toDataURL(mimeType, 0.95);
 
     link.click();
   };

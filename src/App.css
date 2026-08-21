@@ -152,8 +152,8 @@ input {
   text-align: center;
   font-weight: bold;
   line-height: 1.2;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   pointer-events: none;
 }
 
